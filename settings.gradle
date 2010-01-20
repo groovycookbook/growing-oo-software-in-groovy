@@ -1,0 +1,2 @@
+//include 'java-app', 'groovy-app', 'end-to-end'
+include 'java-app'

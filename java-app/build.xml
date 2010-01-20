@@ -1,7 +1,7 @@
 <project name="Auction Sniper" default="build">
     <property name="build.dir" location="build" />
-    <property name="src.dir" location="src" />
-    <property name="test.dir" location="test"/>
+    <property name="src.dir" location="src/main/java" />
+    <property name="test.dir" location="src/test/java"/>
     <property name="lib.dir" value="lib" />
     <property name="app.classes.dir" location="${build.dir}/classes/app" />
     <property name="test.classes.dir" location="${build.dir}/classes/test" />
@@ -25,13 +25,13 @@
     	<mkdir dir="${app.classes.dir}" />
         <javac destdir="${app.classes.dir}"
                srcdir="${app.src.dir}"
-               classpathref="app.lib.path" 
+               classpathref="app.lib.path"
         	   debug="on"/>
     </target>
 
     <target name="test.compile"
         	depends="app.compile">
-        <property name="test.src.dir" location="${test.dir}/end-to-end" />
+        <property name="test.src.dir" location="${test.dir}" />
     	<mkdir dir="${test.classes.dir}" />
         <javac destdir="${test.classes.dir}"
                srcdir="${test.src.dir}"
@@ -55,7 +55,7 @@
             <sysproperty key="com.objogate.wl.keyboard" value="US"/>
             <batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
                 <formatter type="plain"/>
-                <fileset dir="${test.dir}/end-to-end" includes="**/*Test.java" />
+                <fileset dir="${test.dir}" includes="**/*Test.java" />
             </batchtest>
             <classpath>
                 <path refid="test.lib.path" />

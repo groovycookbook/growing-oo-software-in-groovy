@@ -1,1 +1,13 @@
+/*
+usePlugin 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'commons-io:commons-io:1.4'
+    testCompile 'junit:junit:4.+'
+}
+*/
 ant.importBuild 'build.xml'
