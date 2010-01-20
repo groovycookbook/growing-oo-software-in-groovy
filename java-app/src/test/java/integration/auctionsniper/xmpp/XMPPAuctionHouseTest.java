@@ -1,4 +1,4 @@
-package test.integration.auctionsniper.xmpp;
+package integration.auctionsniper.xmpp;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertTrue;
@@ -10,15 +10,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import test.endtoend.auctionsniper.ApplicationRunner;
-import test.endtoend.auctionsniper.FakeAuctionServer;
+import endtoend.auctionsniper.ApplicationRunner;
+import endtoend.auctionsniper.FakeAuctionServer;
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.UserRequestListener.Item;
 import auctionsniper.xmpp.XMPPAuctionException;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
-public class XMPPAuctionHouseIntegrationTest {
+public class XMPPAuctionHouseTest {
   private final FakeAuctionServer auctionServer = new FakeAuctionServer("item-54321");
   private XMPPAuctionHouse auctionHouse;
 

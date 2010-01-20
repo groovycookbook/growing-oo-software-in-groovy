@@ -1,8 +1,8 @@
-package test.endtoend.auctionsniper;
+package endtoend.auctionsniper;
 
 import static auctionsniper.ui.SnipersTableModel.textFor;
 import static org.hamcrest.Matchers.containsString;
-import static test.endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME;
+import static endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package test.auctionsniper;
+package unit.auctionsniper;
 
 import static auctionsniper.SniperState.BIDDING;
 import static auctionsniper.SniperState.LOSING;

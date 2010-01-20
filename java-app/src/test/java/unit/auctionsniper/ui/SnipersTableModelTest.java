@@ -1,4 +1,4 @@
-package test.auctionsniper.ui;
+package unit.auctionsniper.ui;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
@@ -26,7 +26,7 @@ import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.util.Defect;
 
 @RunWith(JMock.class)
-public class SnipersTableModelUnitTest {
+public class SnipersTableModelTest {
   private static final String ITEM_ID = "item 0";
   private final Mockery context = new Mockery();
   private TableModelListener listener = context.mock(TableModelListener.class);

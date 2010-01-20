@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper;
+package endtoend.auctionsniper;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;

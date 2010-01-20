@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper;
+package endtoend.auctionsniper;
 
 import static auctionsniper.ui.MainWindow.NEW_ITEM_ID_NAME;
 import static auctionsniper.ui.MainWindow.NEW_ITEM_STOP_PRICE_NAME;

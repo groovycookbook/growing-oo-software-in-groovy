@@ -1,4 +1,4 @@
-package test.auctionsniper.ui;
+package unit.auctionsniper.ui;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,7 +8,7 @@ import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 import auctionsniper.ui.Column;
 
-public class ColumnUnitTest {
+public class ColumnTest {
 
   @Test public void
   retrievesValuesFromASniperSnapshot() {

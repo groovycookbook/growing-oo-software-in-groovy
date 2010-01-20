@@ -1,4 +1,4 @@
-package test.auctionsniper.xmpp;
+package unit.auctionsniper.xmpp;
 
 import java.util.logging.LogManager;
 import java.util.logging.Logger;

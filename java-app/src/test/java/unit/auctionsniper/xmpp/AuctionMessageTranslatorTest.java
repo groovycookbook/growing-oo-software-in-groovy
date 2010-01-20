@@ -1,4 +1,4 @@
-package test.auctionsniper.xmpp;
+package unit.auctionsniper.xmpp;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
