@@ -9,3 +9,6 @@ The book's website:
 
 The original code:
   http://github.com/sf105/goos-code/
+
+Use gradle to build, e.g.:
+> gradle :java-app:build
