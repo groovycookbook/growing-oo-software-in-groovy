@@ -12,3 +12,4 @@ The original code:
 
 Use gradle to build, e.g.:
 > gradle :java-app:build
+> gradle :junit-windowlicker-tests:test

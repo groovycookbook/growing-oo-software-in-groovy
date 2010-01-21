@@ -4,6 +4,8 @@ repositories {
     mavenCentral()
 }
 
+defaultTasks 'test'
+
 dependencies {
     testCompile project(':java-app')
     testCompile 'jivesoftware:smack:3.1.0'
