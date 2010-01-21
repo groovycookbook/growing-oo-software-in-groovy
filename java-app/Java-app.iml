@@ -8,8 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="deployj" level="project" />
-    <orderEntry type="library" name="developj" level="project" />
+    <orderEntry type="library" name="jmock" level="project" />
+    <orderEntry type="library" name="windowlicker" level="project" />
   </component>
   <component name="POM File Configuration" pomFile="" />
 </module>
