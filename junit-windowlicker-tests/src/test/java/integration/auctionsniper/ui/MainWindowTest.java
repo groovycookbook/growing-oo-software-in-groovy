@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.Test;
 
-import endtoend.auctionsniper.AuctionSniperDriver;
+import fake.auctionsniper.AuctionSniperDriver;
 import auctionsniper.UserRequestListener;
 import auctionsniper.SniperPortfolio;
 import auctionsniper.UserRequestListener.Item;

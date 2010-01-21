@@ -10,8 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import endtoend.auctionsniper.ApplicationRunner;
-import endtoend.auctionsniper.FakeAuctionServer;
+import fake.auctionsniper.ApplicationRunner;
+import fake.auctionsniper.FakeAuctionServer;
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.UserRequestListener.Item;

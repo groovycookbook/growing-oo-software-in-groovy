@@ -1,0 +1,16 @@
+usePlugin 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile project(':java-app')
+    testCompile 'jivesoftware:smack:3.1.0'
+    testCompile 'junit:junit:4.7'
+    testCompile project(':fakeserver-windowlicker-harness')
+}
+
+test {
+    options.systemProperties['com.objogate.wl.keyboard'] = 'US'
+}

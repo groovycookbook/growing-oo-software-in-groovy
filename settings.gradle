@@ -1,2 +1,2 @@
-//include 'java-app', 'groovy-app', 'end-to-end'
-include 'java-app'
+//include 'groovy-app'
+include 'java-app', 'fakeserver-windowlicker-harness', 'junit-windowlicker-tests'
