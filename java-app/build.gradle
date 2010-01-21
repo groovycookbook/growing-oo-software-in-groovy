@@ -1,13 +1,10 @@
-/*
 usePlugin 'java'
 
-repositories {
-    mavenCentral()
+dependencies {
+    compile fileTree(dir: 'lib/deploy', includes: ['*.jar'])
+    runtime fileTree(dir: 'lib/develop', includes: ['*.jar'], excludes: ['*-src.jar'])
 }
 
-dependencies {
-    compile 'commons-io:commons-io:1.4'
-    testCompile 'junit:junit:4.+'
+test {
+    options.systemProperties['com.objogate.wl.keyboard'] = 'US'
 }
-*/
-ant.importBuild 'build.xml'
