@@ -1,8 +1,17 @@
 usePlugin 'java'
 
+repositories {
+    mavenCentral()
+}
 dependencies {
-    compile fileTree(dir: 'lib/deploy', includes: ['*.jar'])
-    runtime fileTree(dir: 'lib/develop', includes: ['*.jar'], excludes: ['*-src.jar'])
+    compile 'commons-io:commons-io:1.4'
+    compile 'commons-lang:commons-lang:2.4'
+    compile fileTree(dir: 'lib/smack_3_1_0', includes: ['*.jar'])
+    // TODO split into compile/runtime
+    testCompile fileTree(dir: 'lib/windowlicker-DEV', includes: ['*.jar'])
+    // TODO split into compile/runtime
+    testCompile fileTree(dir: 'lib/jmock-SNAPSHOT', includes: ['*.jar'])
+    testCompile 'junit:junit:4.7'
 }
 
 test {
