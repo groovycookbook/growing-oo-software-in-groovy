@@ -12,6 +12,8 @@
     <orderEntry type="library" name="windowlicker" level="project" />
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="smack" level="project" />
+    <orderEntry type="library" name="commons-io" level="project" />
+    <orderEntry type="library" name="commons-lang" level="project" />
   </component>
   <component name="POM File Configuration" pomFile="" />
 </module>
