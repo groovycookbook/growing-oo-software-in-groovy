@@ -1,2 +1,2 @@
 //include 'groovy-app'
-include 'java-app', 'fakeserver-windowlicker-harness', 'junit-windowlicker-tests'
+include 'java-app', 'fakeserver-windowlicker-junit-harness', 'junit-windowlicker-tests'

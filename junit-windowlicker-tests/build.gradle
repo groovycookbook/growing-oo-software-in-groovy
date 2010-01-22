@@ -10,7 +10,7 @@ dependencies {
     testCompile project(':java-app')
     testCompile 'jivesoftware:smack:3.1.0'
     testCompile 'junit:junit:4.7'
-    testCompile project(':fakeserver-windowlicker-harness')
+    testCompile project(':fakeserver-windowlicker-junit-harness')
 }
 
 test {
