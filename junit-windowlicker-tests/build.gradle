@@ -7,10 +7,12 @@ repositories {
 defaultTasks 'test'
 
 dependencies {
-    testCompile project(':java-app')
-    testCompile 'jivesoftware:smack:3.1.0'
-    testCompile 'junit:junit:4.7'
-    testCompile project(':fakeserver-windowlicker-junit-harness')
+    compile project(':java-app')
+    compile 'commons-io:commons-io:1.4'
+    compile fileTree('../snapshot-repo/windowlicker-DEV')
+    compile fileTree('../snapshot-repo/hamcrest-SNAPSHOT')
+    compile 'jivesoftware:smack:3.1.0'
+    compile 'junit:junit:4.7'
 }
 
 test {

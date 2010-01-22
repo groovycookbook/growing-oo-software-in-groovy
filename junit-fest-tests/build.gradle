@@ -1,0 +1,16 @@
+usePlugin 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'test'
+
+dependencies {
+    groovy 'org.codehaus.groovy:groovy-all:1.7.0'
+    compile project(':java-app')
+    compile 'org.easytesting:fest-swing:1.2a4'
+    compile 'jivesoftware:smack:3.1.0'
+//    compile 'jivesoftware:smackx:3.1.0'
+    testCompile 'junit:junit:4.7'
+}
