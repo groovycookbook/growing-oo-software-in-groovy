@@ -6,13 +6,20 @@ repositories {
 
 defaultTasks 'test'
 
+test.dependsOn 'checkServer'
+
+task checkServer << {
+    ant.waitfor(checkevery:"1", checkeveryunit:"second", maxwait:"20", timeoutproperty:"openfire.is.down") {
+        http(url:"http://localhost:9090")
+    }
+    ant.fail(message:"OpenFire is not running", if:"openfire.is.down")
+}
+
 dependencies {
     groovy 'org.codehaus.groovy:groovy-all:1.7.0'
     compile project(':java-app')
     compile 'org.easytesting:fest-swing:1.2a4'
     compile 'jivesoftware:smack:3.1.0'
-//    compile 'jivesoftware:smackx:3.1.0'
+    runtime 'jivesoftware:smackx:3.1.0'
     testCompile 'junit:junit:4.7'
 }
-
-// TODO equivalent to build.xml's openfire.check target using waitfor

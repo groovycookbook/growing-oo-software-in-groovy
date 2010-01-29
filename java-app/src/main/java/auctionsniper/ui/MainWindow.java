@@ -23,14 +23,13 @@ import auctionsniper.util.Announcer;
 
 public class MainWindow extends JFrame { 
   public static final String APPLICATION_TITLE = "Auction Sniper";
-  private static final String SNIPERS_TABLE_NAME = "Snipers Table";
+  public static final String SNIPERS_TABLE_NAME = "Snipers Table";
   public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
   public static final String NEW_ITEM_ID_NAME = "item id";
   public static final String JOIN_BUTTON_NAME = "join button";
   public static final String NEW_ITEM_STOP_PRICE_NAME = "stop price";
   
-  private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class); 
-
+  private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
   
   public MainWindow(SniperPortfolio portfolio){ 
     super("Auction Sniper"); 

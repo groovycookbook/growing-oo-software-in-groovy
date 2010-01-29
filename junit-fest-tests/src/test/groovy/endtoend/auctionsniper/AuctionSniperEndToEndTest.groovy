@@ -7,15 +7,16 @@ import harness.auctionsniper.ApplicationRunner
 import static harness.auctionsniper.ApplicationRunner.*
 
 class AuctionSniperEndToEndTest {
-    private final FakeAuctionServer auction = new FakeAuctionServer("item-54321")
-    private final FakeAuctionServer auction2 = new FakeAuctionServer("item-65432")
-    private ApplicationRunner application = new ApplicationRunner()
+    private auction = new FakeAuctionServer("item-54321")
+    private auction2 = new FakeAuctionServer("item-65432")
+    private application = new ApplicationRunner()
 
     @Test
     void sniperJoinsAuctionUntilAuctionCloses() {
         auction.startSellingItem()
         application.startBiddingIn(auction)
         auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
         auction.announceClosed()
         application.hasShownSniperHasLostAuction(auction, 0, 0)
     }
@@ -23,12 +24,11 @@ class AuctionSniperEndToEndTest {
     @Test
     void sniperMakesAHigherBidButLoses () {
         auction.startSellingItem()
-
         application.startBiddingIn(auction)
         auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
         auction.reportPrice(1000, 98, "other bidder")
         application.hasShownSniperIsBidding(auction, 1000, 1098)
-
         auction.hasReceivedBid(1098, SNIPER_XMPP_ID)
 
         auction.announceClosed()
@@ -38,14 +38,12 @@ class AuctionSniperEndToEndTest {
     @Test
     void sniperWinsAnAuctionByBiddingHigher () {
         auction.startSellingItem()
-
         application.startBiddingIn(auction)
         auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
         auction.reportPrice(1000, 98, "other bidder")
         application.hasShownSniperIsBidding(auction, 1000, 1098)
-
         auction.hasReceivedBid(1098, SNIPER_XMPP_ID)
-
         auction.reportPrice(1098, 97, SNIPER_XMPP_ID)
         application.hasShownSniperIsWinning(auction, 1098)
 

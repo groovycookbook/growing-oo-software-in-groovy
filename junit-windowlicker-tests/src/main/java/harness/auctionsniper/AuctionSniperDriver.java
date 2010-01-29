@@ -24,15 +24,12 @@ import com.objogate.wl.swing.gesture.GesturePerformer;
 public class AuctionSniperDriver extends JFrameDriver {
     public AuctionSniperDriver(int timeoutMillis) {
         super(new GesturePerformer(),
-                JFrameDriver.topLevelFrame(
-                        named(MainWindow.MAIN_WINDOW_NAME),
-                        showingOnScreen()),
+                JFrameDriver.topLevelFrame(named(MainWindow.MAIN_WINDOW_NAME), showingOnScreen()),
                 new AWTEventQueueProber(timeoutMillis, 100));
     }
 
     public void hasColumnTitles() {
-        JTableHeaderDriver headers = new JTableHeaderDriver(this,
-                JTableHeader.class);
+        JTableHeaderDriver headers = new JTableHeaderDriver(this, JTableHeader.class);
         headers.hasHeaders(
                 matching(withLabelText("Item"), withLabelText("Last Price"),
                         withLabelText("Last Bid"), withLabelText("State")));
@@ -52,8 +49,7 @@ public class AuctionSniperDriver extends JFrameDriver {
     }
 
     private JTextFieldDriver textField(String fieldName) {
-        JTextFieldDriver newItemId =
-                new JTextFieldDriver(this, JTextField.class, named(fieldName));
+        JTextFieldDriver newItemId = new JTextFieldDriver(this, JTextField.class, named(fieldName));
         newItemId.focusWithMouse();
         return newItemId;
     }

@@ -1,2 +1,2 @@
 //include 'groovy-app'
-include 'java-app', 'junit-windowlicker-tests', 'junit-fest-tests'
+include 'java-app', 'junit-windowlicker-tests', 'junit-fest-tests', 'gmock-tests'

@@ -83,9 +83,11 @@ class FakeAuctionServer {
             assert messages.poll(5, TimeUnit.SECONDS)
         }
 
-        void receivesAMessage(messageMatcher) {
+        void receivesAMessage(match) {
             def message = messages.poll(5, TimeUnit.SECONDS)
-            assert message, hasProperty("body", messageMatcher)
+            println "match: $match, message: ${message?.dump()}"
+            if (message?.bodies && message?.bodies?.size()) println 'value: ' + message.bodies.toList()[0].dump()
+            assert message?.body?.contains(match)
         }
     }
 

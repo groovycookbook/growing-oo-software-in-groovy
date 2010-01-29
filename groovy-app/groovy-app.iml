@@ -5,7 +5,7 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="deployg" level="project" />
+    <orderEntry type="library" name="groovy-1.7.0" level="application" />
   </component>
   <component name="POM File Configuration" pomFile="" />
 </module>

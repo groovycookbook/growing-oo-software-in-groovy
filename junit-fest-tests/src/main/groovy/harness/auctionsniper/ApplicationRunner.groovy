@@ -16,6 +16,7 @@ class ApplicationRunner {
 
     private AuctionLogDriver logDriver = new AuctionLogDriver()
     private AuctionSniperDriver driver
+    private Thread thread
 
     void startBiddingIn(final FakeAuctionServer... auctions) {
         startSniper()

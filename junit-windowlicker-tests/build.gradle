@@ -12,10 +12,19 @@ dependencies {
     compile fileTree('../snapshot-repo/windowlicker-DEV')
     compile fileTree('../snapshot-repo/hamcrest-SNAPSHOT')
     compile 'jivesoftware:smack:3.1.0'
+    runtime 'jivesoftware:smackx:3.1.0'
     compile 'junit:junit:4.7'
 }
 
-// TODO equivalent to build.xml's openfire.check target using waitfor
+test.dependsOn 'checkServer'
+
+// TODO remove dup with FEST tests, push up?
+task checkServer << {
+    ant.waitfor(checkevery:"1", checkeveryunit:"second", maxwait:"20", timeoutproperty:"openfire.is.down") {
+        http(url:"http://localhost:9090")
+    }
+    ant.fail(message:"OpenFire is not running", if:"openfire.is.down")
+}
 
 test {
     options.systemProperties['com.objogate.wl.keyboard'] = 'US'
