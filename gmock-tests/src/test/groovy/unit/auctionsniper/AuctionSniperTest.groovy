@@ -1,13 +1,12 @@
 package unit.auctionsniper
 
 import static auctionsniper.SniperState.*
+import static auctionsniper.AuctionEventListener.PriceSource.*
 
 import auctionsniper.Auction
 import auctionsniper.AuctionSniper
 import auctionsniper.SniperListener
 import auctionsniper.SniperSnapshot
-import auctionsniper.SniperState
-import auctionsniper.AuctionEventListener.PriceSource
 import auctionsniper.UserRequestListener.Item
 import org.gmock.GMockTestCase
 
@@ -41,7 +40,7 @@ class AuctionSniperTest extends GMockTestCase {
         auction.bid(bid)
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, BIDDING))
         play {
-            sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
+            sniper.currentPrice(price, increment, FromOtherBidder)
         }
     }
 
@@ -51,7 +50,7 @@ class AuctionSniperTest extends GMockTestCase {
 
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, LOSING))
         play {
-            sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
+            sniper.currentPrice(price, increment, FromOtherBidder)
         }
     }
 
@@ -62,8 +61,8 @@ class AuctionSniperTest extends GMockTestCase {
         expectSniperBidding()
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, LOSING))
         play {
-            sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
-            sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder)
+            sniper.currentPrice(123, 45, FromOtherBidder)
+            sniper.currentPrice(2345, 25, FromOtherBidder)
         }
     }
 
@@ -73,36 +72,35 @@ class AuctionSniperTest extends GMockTestCase {
 
         expectSniperBidding()
         expectSniperWinning()
-        int bid = 123 + 45
+        def bid = 123 + 45
         auction.bid(bid)
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, LOSING))
         play {
-            sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
-            sniper.currentPrice(168, 45, PriceSource.FromSniper)
-            sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
+            sniper.currentPrice(123, 45, FromOtherBidder)
+            sniper.currentPrice(168, 45, FromSniper)
+            sniper.currentPrice(price, increment, FromOtherBidder)
         }
 
     }
 
     void testContinuesToBeLosingOnceStopPriceHasBeenReached() {
-        final int price1 = 1233
-        final int price2 = 1258
+        def price1 = 1233
+        def price2 = 1258
 
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price1, 0, LOSING))
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price2, 0, LOSING))
         play {
-            sniper.currentPrice(price1, 25, PriceSource.FromOtherBidder)
-            sniper.currentPrice(price2, 25, PriceSource.FromOtherBidder)
+            sniper.currentPrice(price1, 25, FromOtherBidder)
+            sniper.currentPrice(price2, 25, FromOtherBidder)
         }
     }
 
     void testReportsLostIfAuctionClosesWhenBidding() {
         expectSniperBidding()
         ignoringAuction()
-
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 123, 168, LOST))
         play {
-            sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
+            sniper.currentPrice(123, 45, FromOtherBidder)
             sniper.auctionClosed()
         }
     }
@@ -111,7 +109,7 @@ class AuctionSniperTest extends GMockTestCase {
         expectSniperLosing()
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, LOST))
         play {
-            sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder)
+            sniper.currentPrice(1230, 456, FromOtherBidder)
             sniper.auctionClosed()
         }
     }
@@ -121,8 +119,8 @@ class AuctionSniperTest extends GMockTestCase {
         ignoringAuction()
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING))
         play {
-            sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
-            sniper.currentPrice(135, 45, PriceSource.FromSniper)
+            sniper.currentPrice(123, 12, FromOtherBidder)
+            sniper.currentPrice(135, 45, FromSniper)
         }
     }
 
@@ -132,8 +130,8 @@ class AuctionSniperTest extends GMockTestCase {
         ignoringAuction()
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WON))
         play {
-            sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
-            sniper.currentPrice(135, 45, PriceSource.FromSniper)
+            sniper.currentPrice(123, 12, FromOtherBidder)
+            sniper.currentPrice(135, 45, FromSniper)
             sniper.auctionClosed()
         }
     }
@@ -143,7 +141,7 @@ class AuctionSniperTest extends GMockTestCase {
         expectSniperBidding()
         expectSnipperFailed()
         play {
-            sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
+            sniper.currentPrice(123, 45, FromOtherBidder)
             sniper.auctionFailed()
         }
     }
@@ -159,7 +157,7 @@ class AuctionSniperTest extends GMockTestCase {
         expectSniperLosing()
         expectSnipperFailed()
         play {
-            sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder)
+            sniper.currentPrice(1230, 456, FromOtherBidder)
             sniper.auctionFailed()
         }
     }
@@ -169,8 +167,8 @@ class AuctionSniperTest extends GMockTestCase {
         expectSniperBidding()
         expectSniperWinning()
         expectSnipperFailed()
-        sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
-        sniper.currentPrice(135, 45, PriceSource.FromSniper)
+        sniper.currentPrice(123, 12, FromOtherBidder)
+        sniper.currentPrice(135, 45, FromSniper)
         sniper.auctionFailed()
     }
 
@@ -179,7 +177,7 @@ class AuctionSniperTest extends GMockTestCase {
     }
 
     private expectSnipperFailed() {
-        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 00, 0, SniperState.FAILED))
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 00, 0, FAILED))
     }
 
     private expectSniperBidding() {
@@ -194,8 +192,8 @@ class AuctionSniperTest extends GMockTestCase {
         expectSniperState(WINNING)
     }
 
-    private expectSniperState(SniperState state) {
-        sniperListener.sniperStateChanged(match { it.state == state } )
+    private expectSniperState(sniperState) {
+        sniperListener.sniperStateChanged(match { it.state == sniperState } )
     }
 
 }
