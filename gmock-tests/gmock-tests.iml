@@ -12,6 +12,7 @@
     <orderEntry type="library" name="groovy-1.7.0" level="application" />
     <orderEntry type="module" module-name="java-app" />
     <orderEntry type="library" name="gmock" level="project" />
+    <orderEntry type="library" name="smack" level="project" />
   </component>
   <component name="POM File Configuration" pomFile="" />
 </module>
