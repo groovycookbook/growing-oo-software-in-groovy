@@ -7,13 +7,8 @@ repositories {
     mavenCentral()
 }
 
-jmockRuntimeDeps = ['cglib*', 'objenesis*']
 dependencies {
     compile 'commons-lang:commons-lang:2.4'
     compile 'commons-io:commons-io:1.4'
     compile 'jivesoftware:smack:3.1.0'
-    testCompile fileTree('../snapshot-repo/hamcrest-SNAPSHOT')
-    testCompile fileTree(dir: '../snapshot-repo/jmock-SNAPSHOT', excludes: jmockRuntimeDeps)
-    testRuntime fileTree(dir: '../snapshot-repo/jmock-SNAPSHOT', includes: jmockRuntimeDeps)
-    testCompile 'junit:junit:4.7'
 }

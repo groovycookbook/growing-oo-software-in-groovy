@@ -1,0 +1,20 @@
+usePlugin 'java'
+
+group = 'goos'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'test'
+
+jmockRuntimeDeps = ['cglib*', 'objenesis*']
+dependencies {
+    testCompile project(':java-app')
+    testCompile 'jivesoftware:smack:3.1.0'
+    testCompile fileTree('../snapshot-repo/hamcrest-SNAPSHOT')
+    testCompile fileTree(dir: '../snapshot-repo/jmock-SNAPSHOT', excludes: jmockRuntimeDeps)
+    testRuntime fileTree(dir: '../snapshot-repo/jmock-SNAPSHOT', includes: jmockRuntimeDeps)
+    testCompile 'junit:junit:4.7'
+}
