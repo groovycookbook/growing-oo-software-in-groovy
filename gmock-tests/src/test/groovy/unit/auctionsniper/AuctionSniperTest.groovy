@@ -23,13 +23,11 @@ class AuctionSniperTest extends GMockTestCase {
     }
 
     void testHasInitialStateOfJoining() {
-        ['itemId', 'lastPrice', 'lastBid', 'state'].each {
-            assert sniper.snapshot."$it" == SniperSnapshot.joining(ITEM_ID)."$it"
-        }
+        assert sniper.snapshot.state == JOINING
     }
 
     void testReportsLostWhenAuctionClosesImmediately() {
-        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 0, 0, LOST)).atLeastOnce()
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 0, 0, LOST))
         play {
             sniper.auctionClosed()
         }
@@ -39,8 +37,9 @@ class AuctionSniperTest extends GMockTestCase {
         def price = 1001
         def increment = 25
         def bid = price + increment
+
         auction.bid(bid)
-        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, BIDDING)).atLeastOnce()
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, BIDDING))
         play {
             sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
         }
@@ -49,194 +48,154 @@ class AuctionSniperTest extends GMockTestCase {
     void testDoesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice() {
         def price = 1233
         def increment = 25
-        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, LOSING)).atLeastOnce()
+
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, LOSING))
         play {
             sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
         }
     }
 
     void testDoesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice() {
-        allowingSniperBidding()
         def bid = 123 + 45
+
         auction.bid(bid)
-//        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, LOSING)).atLeastOnce()
+        expectSniperBidding()
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, LOSING))
         play {
             sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
             sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder)
         }
     }
-/*
+
     void testDoesNotBidAndReportsLosingIfPriceAfterWinningIsAboveStopPrice() {
-        final int price = 1233
-        final int increment = 25
+        def price = 1233
+        def increment = 25
 
-        allowingSniperBidding()
-        allowingSniperWinning()
-        context.checking(new Expectations() {
-            {
-                int bid = 123 + 45
-                allowing(auction).bid(bid)
+        expectSniperBidding()
+        expectSniperWinning()
+        int bid = 123 + 45
+        auction.bid(bid)
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, LOSING))
+        play {
+            sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
+            sniper.currentPrice(168, 45, PriceSource.FromSniper)
+            sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
+        }
 
-                atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, LOSING)) when(sniperState.is("winning"))
-            }
-        })
-
-        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
-        sniper.currentPrice(168, 45, PriceSource.FromSniper)
-        sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
     }
 
     void testContinuesToBeLosingOnceStopPriceHasBeenReached() {
-        final Sequence states = context.sequence("sniper states")
         final int price1 = 1233
         final int price2 = 1258
 
-        context.checking(new Expectations() {
-            {
-                atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price1, 0, LOSING)) inSequence(states)
-                atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price2, 0, LOSING)) inSequence(states)
-            }
-        })
-
-        sniper.currentPrice(price1, 25, PriceSource.FromOtherBidder)
-        sniper.currentPrice(price2, 25, PriceSource.FromOtherBidder)
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price1, 0, LOSING))
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, price2, 0, LOSING))
+        play {
+            sniper.currentPrice(price1, 25, PriceSource.FromOtherBidder)
+            sniper.currentPrice(price2, 25, PriceSource.FromOtherBidder)
+        }
     }
 
     void testReportsLostIfAuctionClosesWhenBidding() {
-        allowingSniperBidding()
+        expectSniperBidding()
         ignoringAuction()
 
-        context.checking(new Expectations() {
-            {
-                atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 123, 168, LOST))
-                when(sniperState.is("bidding"))
-            }
-        })
-
-        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
-        sniper.auctionClosed()
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 123, 168, LOST))
+        play {
+            sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
+            sniper.auctionClosed()
+        }
     }
 
     void testReportsLostIfAuctionClosesWhenLosing() {
-        allowingSniperLosing()
-        context.checking(new Expectations() {
-            {
-                atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, LOST))
-                when(sniperState.is("losing"))
-            }
-        })
-
-        sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder)
-        sniper.auctionClosed()
+        expectSniperLosing()
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, LOST))
+        play {
+            sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder)
+            sniper.auctionClosed()
+        }
     }
 
-
-
     void testReportsIsWinningWhenCurrentPriceComesFromSniper() {
-        allowingSniperBidding()
+        expectSniperBidding()
         ignoringAuction()
-        context.checking(new Expectations() {
-            {
-                atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING)) when(sniperState.is("bidding"))
-            }
-        })
-
-        sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
-        sniper.currentPrice(135, 45, PriceSource.FromSniper)
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING))
+        play {
+            sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
+            sniper.currentPrice(135, 45, PriceSource.FromSniper)
+        }
     }
 
     void testReportsWonIfAuctionClosesWhenWinning() {
-        allowingSniperBidding()
-        allowingSniperWinning()
+        expectSniperBidding()
+        expectSniperWinning()
         ignoringAuction()
-
-        context.checking(new Expectations() {
-            {
-                atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WON)) when(sniperState.is("winning"))
-            }
-        })
-
-        sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
-        sniper.currentPrice(135, 45, PriceSource.FromSniper)
-        sniper.auctionClosed()
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WON))
+        play {
+            sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
+            sniper.currentPrice(135, 45, PriceSource.FromSniper)
+            sniper.auctionClosed()
+        }
     }
 
     void testReportsFailedIfAuctionFailsWhenBidding() {
         ignoringAuction()
-        allowingSniperBidding()
-
-        expectSniperToFailWhenItIs("bidding")
-
-        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
-        sniper.auctionFailed()
+        expectSniperBidding()
+        expectSnipperFailed()
+        play {
+            sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
+            sniper.auctionFailed()
+        }
     }
 
     void testReportsFailedIfAuctionFailsImmediately() {
-        context.checking(new Expectations() {
-            {
-                atLeast(1).of(sniperListener).sniperStateChanged(SniperSnapshot.joining(ITEM_ID).failed())
-            }
-        })
-
-        sniper.auctionFailed()
+        sniperListener.sniperStateChanged(SniperSnapshot.joining(ITEM_ID).failed())
+        play {
+            sniper.auctionFailed()
+        }
     }
 
     void testReportsFailedIfAuctionFailsWhenLosing() {
-        allowingSniperLosing()
-
-        expectSniperToFailWhenItIs("losing")
-
-        sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder)
-        sniper.auctionFailed()
+        expectSniperLosing()
+        expectSnipperFailed()
+        play {
+            sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder)
+            sniper.auctionFailed()
+        }
     }
-
 
     void testReportsFailedIfAuctionFailsWhenWinning() {
         ignoringAuction()
-        allowingSniperBidding()
-        allowingSniperWinning()
-
-        expectSniperToFailWhenItIs("winning")
-
+        expectSniperBidding()
+        expectSniperWinning()
+        expectSnipperFailed()
         sniper.currentPrice(123, 12, PriceSource.FromOtherBidder)
         sniper.currentPrice(135, 45, PriceSource.FromSniper)
         sniper.auctionFailed()
     }
 
-    private expectSniperToFailWhenItIs(final String state) {
-        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 00, 0, SniperState.FAILED))
-        when(sniperState.is(state))
-    }
-*/
     private ignoringAuction() {
-//        context.checking(new Expectations() { {
-//                ignoring(auction)
-//        } })
+        auction.bid(match{ true }).stub()
     }
 
-    private allowingSniperBidding() {
-        allowSniperStateChange(BIDDING, "bidding")
+    private expectSnipperFailed() {
+        sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 00, 0, SniperState.FAILED))
     }
 
-    private allowingSniperLosing() {
-        allowSniperStateChange(LOSING, "losing")
+    private expectSniperBidding() {
+        expectSniperState(BIDDING)
     }
 
-    private allowingSniperWinning() {
-        allowSniperStateChange(WINNING, "winning")
+    private expectSniperLosing() {
+        expectSniperState(LOSING)
     }
 
-    private allowSniperStateChange(SniperState newState, String oldState) {
-        sniperListener.sniperStateChanged(match { it instanceof AuctionSniper &&
-                it.snapshot.state.toString().toLowerCase() == newState.toLowerCase() } ).atMostOnce()
+    private expectSniperWinning() {
+        expectSniperState(WINNING)
     }
 
-//    private Matcher<SniperSnapshot> aSniperThatIs(final SniperState state) {
-//        return new FeatureMatcher<SniperSnapshot, SniperState>(equalTo(state), "sniper that is ", "was") {
-//            @Override
-//            protected SniperState featureValueOf(SniperSnapshot actual) {
-//                return actual.state
-//            }
-//        }
-//    }
-} 
+    private expectSniperState(SniperState state) {
+        sniperListener.sniperStateChanged(match { it.state == state } )
+    }
+
+}
