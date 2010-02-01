@@ -15,6 +15,7 @@ import groovy.mock.interceptor.MockFor
 class SnipersTableModelTest extends GroovyTestCase {
     private ITEM_ID = "item 0"
     def listenerMock = new MockFor(TableModelListener)
+    private listener
     private model = new SnipersTableModel()
     private sniper = new AuctionSniper(new Item(ITEM_ID, 234), null)
 
@@ -33,6 +34,7 @@ class SnipersTableModelTest extends GroovyTestCase {
         addListener()
         model.sniperAdded(sniper)
         assertRowMatchesSnapshot(0, SniperSnapshot.joining(ITEM_ID))
+        verifyListener()
     }
 
     void testSetsSniperValuesInColumns() {
@@ -43,6 +45,7 @@ class SnipersTableModelTest extends GroovyTestCase {
         model.sniperAdded(sniper)
         model.sniperStateChanged(bidding)
         assertRowMatchesSnapshot(0, bidding)
+        verifyListener()
     }
 
     void testNotifiesListenersWhenAddingASniper() {
@@ -52,21 +55,23 @@ class SnipersTableModelTest extends GroovyTestCase {
         model.sniperAdded(sniper)
         assertEquals(1, model.getRowCount())
         assertRowMatchesSnapshot(0, SniperSnapshot.joining(ITEM_ID))
+        verifyListener()
     }
 
     void testHoldsSnipersInAdditionOrder() {
         AuctionSniper sniper2 = new AuctionSniper(new Item("item 1", 345), null)
-        listenerMock.demand.tableChanged(1..2) { }
+        listenerMock.demand.tableChanged(2..2) { }
         addListener()
         model.sniperAdded(sniper)
         model.sniperAdded(sniper2)
         assertEquals(ITEM_ID, cellValue(0, Column.ITEM_IDENTIFIER))
         assertEquals("item 1", cellValue(1, Column.ITEM_IDENTIFIER))
+        verifyListener()
     }
 
     void testUpdatesCorrectRowForSniper() {
         def sniper2 = new AuctionSniper(new Item("item 1", 345), null)
-        listenerMock.demand.tableChanged(1..2, withAnyInsertionEvent)
+        listenerMock.demand.tableChanged(2..2, withAnyInsertionEvent)
         listenerMock.demand.tableChanged(withAChangeInRow.curry(1))
         addListener()
         model.sniperAdded(sniper)
@@ -74,6 +79,7 @@ class SnipersTableModelTest extends GroovyTestCase {
         def winning1 = sniper2.snapshot.winning(123)
         model.sniperStateChanged(winning1)
         assertRowMatchesSnapshot(1, winning1)
+        verifyListener()
     }
 
     void testThrowsDefectIfNoExistingSniperForAnUpdate() {
@@ -83,7 +89,12 @@ class SnipersTableModelTest extends GroovyTestCase {
     }
 
     private addListener() {
-        model.addTableModelListener(listenerMock.proxyDelegateInstance())
+        listener = listenerMock.proxyDelegateInstance()
+        model.addTableModelListener(listener)
+    }
+
+    private verifyListener() {
+        listenerMock.verify(listener)
     }
 
     private assertRowMatchesSnapshot(int row, SniperSnapshot snapshot) {

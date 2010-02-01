@@ -139,7 +139,7 @@ class AuctionSniperTest extends GMockTestCase {
     void testReportsFailedIfAuctionFailsWhenBidding() {
         ignoringAuction()
         expectSniperBidding()
-        expectSnipperFailed()
+        expectSniperFailed()
         play {
             sniper.currentPrice(123, 45, FromOtherBidder)
             sniper.auctionFailed()
@@ -155,7 +155,7 @@ class AuctionSniperTest extends GMockTestCase {
 
     void testReportsFailedIfAuctionFailsWhenLosing() {
         expectSniperLosing()
-        expectSnipperFailed()
+        expectSniperFailed()
         play {
             sniper.currentPrice(1230, 456, FromOtherBidder)
             sniper.auctionFailed()
@@ -166,17 +166,19 @@ class AuctionSniperTest extends GMockTestCase {
         ignoringAuction()
         expectSniperBidding()
         expectSniperWinning()
-        expectSnipperFailed()
-        sniper.currentPrice(123, 12, FromOtherBidder)
-        sniper.currentPrice(135, 45, FromSniper)
-        sniper.auctionFailed()
+        expectSniperFailed()
+        play {
+            sniper.currentPrice(123, 12, FromOtherBidder)
+            sniper.currentPrice(135, 45, FromSniper)
+            sniper.auctionFailed()
+        }
     }
 
     private ignoringAuction() {
-        auction.bid(match{ true }).stub()
+        auction.bid(match { true }).stub()
     }
 
-    private expectSnipperFailed() {
+    private expectSniperFailed() {
         sniperListener.sniperStateChanged(new SniperSnapshot(ITEM_ID, 00, 0, FAILED))
     }
 
@@ -193,7 +195,7 @@ class AuctionSniperTest extends GMockTestCase {
     }
 
     private expectSniperState(sniperState) {
-        sniperListener.sniperStateChanged(match { it.state == sniperState } )
+        sniperListener.sniperStateChanged(match { it.state == sniperState })
     }
 
 }
