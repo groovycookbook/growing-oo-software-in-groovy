@@ -25,7 +25,7 @@ class AuctionSniperTest extends GroovyTestCase {
     }
 
     void testReportsLostWhenAuctionClosesImmediately() {
-        sniperListenerMock.demand.sniperStateChanged { new SniperSnapshot(ITEM_ID, 0, 0, LOST) }
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, 0, 0, LOST) }
         createSniper()
         sniper.auctionClosed()
         verifyMocks()
@@ -36,7 +36,7 @@ class AuctionSniperTest extends GroovyTestCase {
         def increment = 25
         def bid = price + increment
 
-        sniperListenerMock.demand.sniperStateChanged { new SniperSnapshot(ITEM_ID, price, bid, BIDDING) }
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, price, bid, BIDDING) }
         auctionMock.demand.bid { bid }
         createSniper()
         sniper.currentPrice(price, increment, FromOtherBidder)
@@ -47,7 +47,7 @@ class AuctionSniperTest extends GroovyTestCase {
         def price = 1233
         def increment = 25
 
-        sniperListenerMock.demand.sniperStateChanged { new SniperSnapshot(ITEM_ID, price, 0, LOSING) }
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, price, 0, LOSING) }
         createSniper()
         sniper.currentPrice(price, increment, FromOtherBidder)
         verifyMocks()
@@ -58,7 +58,7 @@ class AuctionSniperTest extends GroovyTestCase {
 
         auctionMock.demand.bid { bid }
         expectSniperBidding()
-        sniperListenerMock.demand.sniperStateChanged { new SniperSnapshot(ITEM_ID, 2345, bid, LOSING) }
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, 2345, bid, LOSING) }
         createSniper()
         sniper.currentPrice(123, 45, FromOtherBidder)
         sniper.currentPrice(2345, 25, FromOtherBidder)
@@ -73,7 +73,7 @@ class AuctionSniperTest extends GroovyTestCase {
         expectSniperBidding()
         expectSniperWinning()
         auctionMock.demand.bid { bid }
-        sniperListenerMock.demand.sniperStateChanged { new SniperSnapshot(ITEM_ID, price, bid, LOSING) }
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, price, bid, LOSING) }
         createSniper()
         sniper.currentPrice(123, 45, FromOtherBidder)
         sniper.currentPrice(168, 45, FromSniper)
@@ -85,8 +85,8 @@ class AuctionSniperTest extends GroovyTestCase {
         def price1 = 1233
         def price2 = 1258
 
-        sniperListenerMock.demand.sniperStateChanged {new SniperSnapshot(ITEM_ID, price1, 0, LOSING)}
-        sniperListenerMock.demand.sniperStateChanged {new SniperSnapshot(ITEM_ID, price2, 0, LOSING)}
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, price1, 0, LOSING) }
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, price2, 0, LOSING) }
         createSniper()
         sniper.currentPrice(price1, 25, FromOtherBidder)
         sniper.currentPrice(price2, 25, FromOtherBidder)
@@ -96,7 +96,7 @@ class AuctionSniperTest extends GroovyTestCase {
     void testReportsLostIfAuctionClosesWhenBidding() {
         expectSniperBidding()
         ignoringAuction()
-        sniperListenerMock.demand.sniperStateChanged{ new SniperSnapshot(ITEM_ID, 123, 168, LOST) }
+        sniperListenerMock.demand.sniperStateChanged{ assert it == new SniperSnapshot(ITEM_ID, 123, 168, LOST) }
         createSniper()
         sniper.currentPrice(123, 45, FromOtherBidder)
         sniper.auctionClosed()
@@ -105,7 +105,7 @@ class AuctionSniperTest extends GroovyTestCase {
 
     void testReportsLostIfAuctionClosesWhenLosing() {
         expectSniperLosing()
-        sniperListenerMock.demand.sniperStateChanged{ new SniperSnapshot(ITEM_ID, 1230, 0, LOST) }
+        sniperListenerMock.demand.sniperStateChanged{ assert it == new SniperSnapshot(ITEM_ID, 1230, 0, LOST) }
         createSniper()
         sniper.currentPrice(1230, 456, FromOtherBidder)
         sniper.auctionClosed()
@@ -115,7 +115,7 @@ class AuctionSniperTest extends GroovyTestCase {
     void testReportsIsWinningWhenCurrentPriceComesFromSniper() {
         expectSniperBidding()
         ignoringAuction()
-        sniperListenerMock.demand.sniperStateChanged{ new SniperSnapshot(ITEM_ID, 135, 135, WINNING) }
+        sniperListenerMock.demand.sniperStateChanged{ assert it == new SniperSnapshot(ITEM_ID, 135, 135, WINNING) }
         createSniper()
         sniper.currentPrice(123, 12, FromOtherBidder)
         sniper.currentPrice(135, 45, FromSniper)
@@ -126,7 +126,7 @@ class AuctionSniperTest extends GroovyTestCase {
         expectSniperBidding()
         expectSniperWinning()
         ignoringAuction()
-        sniperListenerMock.demand.sniperStateChanged{ new SniperSnapshot(ITEM_ID, 135, 135, WON) }
+        sniperListenerMock.demand.sniperStateChanged{ assert it == new SniperSnapshot(ITEM_ID, 135, 135, WON) }
         createSniper()
         sniper.currentPrice(123, 12, FromOtherBidder)
         sniper.currentPrice(135, 45, FromSniper)
@@ -145,7 +145,7 @@ class AuctionSniperTest extends GroovyTestCase {
     }
 
     void testReportsFailedIfAuctionFailsImmediately() {
-        sniperListenerMock.demand.sniperStateChanged{ SniperSnapshot.joining(ITEM_ID).failed() }
+        sniperListenerMock.demand.sniperStateChanged{ assert it == SniperSnapshot.joining(ITEM_ID).failed() }
         createSniper()
         sniper.auctionFailed()
         verifyMocks()
@@ -189,7 +189,7 @@ class AuctionSniperTest extends GroovyTestCase {
     }
 
     private expectSniperFailed() {
-        sniperListenerMock.demand.sniperStateChanged { new SniperSnapshot(ITEM_ID, 00, 0, FAILED) }
+        sniperListenerMock.demand.sniperStateChanged { assert it == new SniperSnapshot(ITEM_ID, 00, 0, FAILED) }
     }
 
     private expectSniperBidding() {
@@ -205,7 +205,7 @@ class AuctionSniperTest extends GroovyTestCase {
     }
 
     private expectSniperState(sniperState) {
-        sniperListenerMock.demand.sniperStateChanged { it.state == sniperState }
+        sniperListenerMock.demand.sniperStateChanged { assert it.state == sniperState }
     }
 
 }
