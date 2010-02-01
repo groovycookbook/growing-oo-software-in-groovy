@@ -9,7 +9,6 @@ defaultTasks 'test'
 dependencies {
     groovy 'org.codehaus.groovy:groovy-all:1.7.0'
     testCompile project(':java-app')
-    testCompile 'org.gmock:gmock:0.8.0'
     testCompile 'jivesoftware:smack:3.1.0'
     testCompile 'junit:junit:4.7'
 }

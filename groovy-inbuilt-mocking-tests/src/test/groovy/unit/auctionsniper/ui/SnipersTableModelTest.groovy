@@ -25,7 +25,7 @@ class SnipersTableModelTest extends GroovyTestCase {
 
     void testSetsUpColumnHeadings() {
         for (Column column: Column.values()) {
-            assertEquals(column.name, model.getColumnName(column.ordinal()))
+            assert column.name == model.getColumnName(column.ordinal())
         }
     }
 
